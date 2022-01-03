@@ -1,0 +1,26 @@
+<section>
+    <div class="container">
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">User name</th>
+      <th scope="col">email</th>
+      <th scope="col">Phone no</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+      {{#each members}}
+    <tr>
+      <th scope="row">{{this.user_name}}</th>
+      <td>{{this.email}}</td>
+      <td>{{this.phone}}</td>
+      <td><a href="" type="button" class="btn btn-primary">view</a></td>
+    </tr>
+    {{/each}}
+    
+  </tbody>
+</table>
+
+    </div>
+</section>
