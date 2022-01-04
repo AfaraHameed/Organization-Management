@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-
+var memberHelper = require('../helpers/members_helper')
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -60,6 +60,20 @@ router.get('/members_details', function (req,res,next){
 router.get('/add_installment',(req,res,next)=>{
 
   res.render('admin/add_installment',{admin:true})
+})
+
+router.get('/add_member',function(req,res,next){
+  res.render('admin/add_member')
+});
+router.post('/add_member',(req,res,next)=>{
+
+  console.log(req.body)
+  memberHelper.addMember(req.body,(result)=>{
+    res.render('admin/add_member')
+
+  })
+
+  
 })
 
 module.exports = router;
