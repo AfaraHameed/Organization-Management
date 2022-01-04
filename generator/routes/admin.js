@@ -1,28 +1,16 @@
 var express = require('express');
+const members_helper = require('../helpers/members_helper');
 var router = express.Router();
 var memberHelper = require('../helpers/members_helper')
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  let members = [{
-    user_name:"aaaaa",
-    email :"aaa@gmail.com",
-    phone:"121232323"
   
-  },
-  {
-    user_name:"bbbb",
-    email :"bbb@gmail.com",
-    phone:"121232323"
-  },
-  {
-    user_name:"aaaaa",
-    email :"aaa@gmail.com",
-    phone:"121232323"
-  }
-  ]
+  memberHelper.getMembers().then((members)=>{
+    console.log(members)
+    res.render('admin/view_members',{admin : true , members});
+  })
 
-  res.render('admin/view_members',{admin : true , members});
 });
 
 //member details page
