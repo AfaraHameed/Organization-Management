@@ -1,15 +1,12 @@
 var express = require('express');
-const members_helper = require('../helpers/members_helper');
+//const members_helper = require('../helpers/members_helper');
 var router = express.Router();
 var memberHelper = require('../helpers/members_helper')
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
   
-  memberHelper.getMembers().then((members)=>{
-    console.log(members)
-    res.render('admin/view_members',{admin : true , members});
-  })
+ res.render('admincheck',{admin:true})
 
 });
 
@@ -51,17 +48,24 @@ router.get('/add_installment',(req,res,next)=>{
 })
 
 router.get('/add_member',function(req,res,next){
-  res.render('admin/add_member')
+  res.render('admin/add_member',{admin:true})
 });
 router.post('/add_member',(req,res,next)=>{
 
   console.log(req.body)
   memberHelper.addMember(req.body,(result)=>{
-    res.render('admin/add_member')
+    res.render('admin/add_member',{admin:true})
 
   })
-
-  
 })
+
+router.get('/view_members',function(req,res,next){
+  
+   
+  memberHelper.getMembers().then((members)=>{
+    console.log(members)
+    res.render('admin/view_members',{admin : true , members});
+  })
+});
 
 module.exports = router;
