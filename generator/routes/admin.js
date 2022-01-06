@@ -13,32 +13,6 @@ router.get('/', function(req, res, next) {
 //member details page
 router.get('/members_details', function (req,res,next){
 
-    let memberDetail=[{
-      username : "aaa",
-      email : "ccc@gmail.com",
-      monthly_amount : 1122,
-      date_m : '22/22/22',
-      loan_amount:111,
-      date_l:'22/22/22'
-
-    },
-    {
-      username : "aaa",
-      email : "ccc@gmail.com",
-      monthly_amount : 1122,
-      date_m : '22/22/22',
-     
-
-    },
-    {
-      username : "aaa",
-      email : "ccc@gmail.com",
-      monthly_amount : 1122,
-      date_m : '22/22/22',
-      loan_amount:111,
-      date_l:'22/22/22'
-
-    }]
     res.render('admin/members_details',{admin:true,memberDetail})
 })
 
@@ -123,6 +97,24 @@ router.post('/searchId_viewInstallment',(req,res,next)=>{
 router.get('/searchId_loanWithdrawal',(req,res,next)=>{
 
   res.render('admin/searchId_loanWithdrawal',{admin:true})
+})
+
+router.post('/searchId_loanWithdrawal',(req,res,next)=>{
+  memberHelper.getNameEmail(req.body.RegId).then((member)=>{
+    console.log(req.body)
+    console.log(member)
+   res.render('admin/add_loan',{admin:true,member})
+   //res.render('admin/just',{admin:true,member})
+  })
+
+})
+
+router.post('/add_loan',(req,res,next)=>{
+  memberHelper.insertLoan(req.body).then((result)=>{
+    console.log(result)
+    res.render('admin/add_loan',{admin:true})
+
+  })
 })
 
 // router.get('/view_installment',(req,res,next)=>{

@@ -36,6 +36,12 @@ module.exports = {
         let installment = await db.get().collection(collection.INSTALLMENT_COLLECTION).find({RegId:RegId}).toArray()
         resolve(installment)
     })
-}
+    },
+    insertLoan:(loan)=>{
+        return new Promise(async(resolve,reject)=>{
+            db.get().collection(collection.LOAN_WITHDRAWAL).insertOne(loan)
+            resolve(loan)
+        })
+    }
     
 }
