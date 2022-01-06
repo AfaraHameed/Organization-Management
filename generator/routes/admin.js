@@ -117,6 +117,42 @@ router.post('/add_loan',(req,res,next)=>{
   })
 })
 
+router.get('/searchId_addLoanInstallment',(req,res,next)=>{
+
+  res.render('admin/searchId_addLoanInstallment',{admin:true})
+})
+router.post('/searchId_addLoanInstallment',(req,res,next)=>{
+  memberHelper.getNameEmail(req.body.RegId).then((member)=>{
+    console.log(req.body)
+    console.log(member)
+   res.render('admin/add_loanInstallment',{admin:true,member})
+   //res.render('admin/just',{admin:true,member})
+  })
+
+})
+
+router.post('/add_loanInstallment',(req,res,next)=>{
+  memberHelper.insertLoanInstallment(req.body).then((result)=>{
+    console.log("hai add_loanInstallment")
+    console.log(result[0].amount)
+
+    memberHelper.updateLoanInstallment(result[0].amount,req.body).then((result)=>{
+      console.log(result)
+      res.render('admin/add_loanInstallment',{admin:true})
+    })
+    
+  })
+    // memberHelper.updateLoanWithdrawal(req.body).then((result)=>{
+    //   console.log(result)
+    //   console.log("hello")
+    //   res.render('admin/add_loanInstallment',{admin:true})
+    // })
+  })
+    
+   
+
+  
+
 // router.get('/view_installment',(req,res,next)=>{
 //   res.render('admin/view_installment',{admin:true})
 // })

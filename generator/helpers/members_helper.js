@@ -42,6 +42,73 @@ module.exports = {
             db.get().collection(collection.LOAN_WITHDRAWAL).insertOne(loan)
             resolve(loan)
         })
-    }
+    },
+    insertLoanInstallment:(loanInstallment)=>{
+        return new Promise(async(resolve,reject)=>{
+            loanInstallment.amount = parseInt(loanInstallment.amount)
+            db.get().collection(collection.LOAN_INSTALLMENT).insertOne(loanInstallment)
+           // resolve(loan)
+
+       
+            let balance_loan = db.get().collection(collection.LOAN_WITHDRAWAL).aggregate([
+                {
+                $match:
+                 { RegId: loanInstallment.RegId  }
+                },
+                 {
+                    $project: {
+                        loan_balance: { $subtract: [{'$convert': { 'input': '$amount', 'to': 'int' }}, loanInstallment.amount ] }
+                    }
+                },
+                {
+                    $set:{
+                        amount:'$loan_balance'
+                    }
+                }
+            
+        ]).toArray()
+        resolve(balance_loan)
+
+
+
+        
+        //     db.get().collection(collection.LOAN_WITHDRAWAL).updateOne({ RegId: loanInstallment.RegId },
+        //         {$set:
+        //         {
+        //             //amount:{ $subtract: [{'$convert': { 'input': '$amount', 'to': 'int' }}, loanInstallment.amount ] } 
+        //        amount:{$subtract:['$amount',loanInstallment.amount ]}
+        //         }
+        //     })
+            
+        //     resolve(loanInstallment)
+        // })
+    })
+    // updateLoanWithdrawal:(loan)=>{
+    //     return new Promise(async(resolve,reject)=>{
+    //         console.log("update hai")
+    //         db.get().collection(collection.LOAN_WITHDRAWAL).updateOne({ RegId: loan.RegId },
+    //         {
+    //              $subtract: ["amount", loan.amount ] 
+    //         }).then((response) => {
+    //             resolve(true)
+    //         })
+
+    //     })
+       
+
+    // }
     
+},
+
+updateLoanInstallment:(balance_loan,loanbody)=>{
+    return new Promise(async(resolve,reject)=>{
+        db.get().collection(collection.LOAN_WITHDRAWAL).updateOne({RegId:loanbody.RegId},
+            {
+            $set:
+            {amount:balance_loan}
+            }
+        )
+        resolve(balance_loan)
+    })
+}
 }
