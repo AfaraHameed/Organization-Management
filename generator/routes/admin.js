@@ -103,7 +103,13 @@ router.post('/searchId_loanWithdrawal',(req,res,next)=>{
   memberHelper.getNameEmail(req.body.RegId).then((member)=>{
     console.log(req.body)
     console.log(member)
-   res.render('admin/add_loan',{admin:true,member})
+
+    memberHelper.getLoanWithdrawal(req.body).then((balance)=>{
+      console.log(balance)
+      res.render('admin/add_loan',{admin:true,member,balance})
+    })
+
+   //res.render('admin/add_loan',{admin:true,member})
    //res.render('admin/just',{admin:true,member})
   })
 
@@ -125,7 +131,12 @@ router.post('/searchId_addLoanInstallment',(req,res,next)=>{
   memberHelper.getNameEmail(req.body.RegId).then((member)=>{
     console.log(req.body)
     console.log(member)
-   res.render('admin/add_loanInstallment',{admin:true,member})
+    memberHelper.getLoanWithdrawal(req.body).then((balance)=>{
+      console.log(balance)
+      res.render('admin/add_loanInstallment',{admin:true,member,balance})
+    })
+
+  // res.render('admin/add_loanInstallment',{admin:true,member})
    //res.render('admin/just',{admin:true,member})
   })
 
@@ -136,9 +147,14 @@ router.post('/add_loanInstallment',(req,res,next)=>{
     console.log("hai add_loanInstallment")
     console.log(result[0].amount)
 
-    memberHelper.updateLoanInstallment(result[0].amount,req.body).then((result)=>{
+    memberHelper.updateLoanWithdrawal(result[0].amount,req.body).then((result)=>{
       console.log(result)
-      res.render('admin/add_loanInstallment',{admin:true})
+     // res.render('admin/add_loanInstallment',{admin:true})
+    })
+
+    memberHelper.getLoanWithdrawal(req.body).then((balance)=>{
+      console.log(balance)
+          res.render('admin/loan_balance',{admin:true,balance})
     })
     
   })
@@ -161,22 +177,12 @@ router.post('/add_loanInstallment',(req,res,next)=>{
 
 
 
-router.get('/just',(req,res,next)=>{
 
-  res.render('admin/just',{admin:true})
-})
-router.get('/add_loan',(req,res,next)=>{
 
-  res.render('admin/add_loan',{admin:true})
-})
-router.get('/searchId_addLoant',(req,res,next)=>{
 
-  res.render('admin/searchId_addLoan',{admin:true})
-})
+router.get('/viewLoan',(req,res,next)=>{
 
-router.get('/searchId_viewLoan',(req,res,next)=>{
-
-  res.render('admin/searchId_viewLoan',{admin:true})
+  res.render('admin/viewLoan',{admin:true})
 })
 
 

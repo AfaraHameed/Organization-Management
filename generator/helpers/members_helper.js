@@ -100,7 +100,7 @@ module.exports = {
     
 },
 
-updateLoanInstallment:(balance_loan,loanbody)=>{
+updateLoanWithdrawal:(balance_loan,loanbody)=>{
     return new Promise(async(resolve,reject)=>{
         db.get().collection(collection.LOAN_WITHDRAWAL).updateOne({RegId:loanbody.RegId},
             {
@@ -109,6 +109,15 @@ updateLoanInstallment:(balance_loan,loanbody)=>{
             }
         )
         resolve(balance_loan)
+
     })
+},
+getLoanWithdrawal:(loanbody)=>{
+    return new Promise(async(resolve,reject)=>{
+        let balance = db.get().collection(collection.LOAN_WITHDRAWAL).find({RegId:loanbody.RegId}).toArray()
+       console.log('balance loasn is:'+balance.amount)
+        resolve(balance)
+    })
+   
 }
 }
