@@ -115,9 +115,16 @@ updateLoanWithdrawal:(balance_loan,loanbody)=>{
 getLoanWithdrawal:(loanbody)=>{
     return new Promise(async(resolve,reject)=>{
         let balance = db.get().collection(collection.LOAN_WITHDRAWAL).find({RegId:loanbody.RegId}).toArray()
-       console.log('balance loasn is:'+balance.amount)
+       console.log('balance loasn is:'+balance)
         resolve(balance)
     })
    
+},
+getLoanWithdrawalMembers:()=>{
+    return new Promise(async(resolve,reject)=>{
+        let members = db.get().collection(collection.LOAN_WITHDRAWAL).find().toArray()
+        resolve(members)
+    })
+
 }
 }

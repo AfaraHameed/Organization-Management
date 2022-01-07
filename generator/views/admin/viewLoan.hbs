@@ -1,1 +1,29 @@
-<h1>hai</h1>
+<section>
+    <div class="container">
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Reg Id</th>
+      <th scope="col">User name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Amount</th>
+      <th scope="col">Date</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+      {{#each members}}
+    <tr>
+      <th scope="row">{{this.RegId}}</th>
+      <th>{{this.name}}</th>
+      <td>{{this.email}}</td>
+      <td>{{this.amount}}</td>
+      <td>{{this.date}}</td>
+    </tr>
+    {{/each}}
+    
+  </tbody>
+</table>
+
+    </div>
+</section>

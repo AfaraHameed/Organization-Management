@@ -182,7 +182,11 @@ router.post('/add_loanInstallment',(req,res,next)=>{
 
 router.get('/viewLoan',(req,res,next)=>{
 
-  res.render('admin/viewLoan',{admin:true})
+  memberHelper.getLoanWithdrawalMembers().then((members)=>{
+    console.log(members)
+    res.render('admin/viewLoan',{admin:true,members})
+  })
+ 
 })
 
 
