@@ -114,7 +114,7 @@ updateLoanWithdrawal:(balance_loan,loanbody)=>{
 },
 getLoanWithdrawal:(loanbody)=>{
     return new Promise(async(resolve,reject)=>{
-        let balance = db.get().collection(collection.LOAN_WITHDRAWAL).find({RegId:loanbody.RegId}).toArray()
+        let balance = await db.get().collection(collection.LOAN_WITHDRAWAL).find({RegId:loanbody.RegId}).toArray()
        console.log('balance loasn is:'+balance)
         resolve(balance)
     })
@@ -122,9 +122,23 @@ getLoanWithdrawal:(loanbody)=>{
 },
 getLoanWithdrawalMembers:()=>{
     return new Promise(async(resolve,reject)=>{
-        let members = db.get().collection(collection.LOAN_WITHDRAWAL).find().toArray()
+        let members = await db.get().collection(collection.LOAN_WITHDRAWAL).find().toArray()
         resolve(members)
     })
 
+},
+deleteLoanWithdrawal:(loanbody)=>{
+    return new Promise(async(resolve,reject)=>{
+        db.get().collection(collection.LOAN_WITHDRAWAL).deleteOne({RegId:loanbody.RegId})
+        resolve(result)
+    })
+},
+deleteLoanInstallment:(loanbody)=>{
+    return new Promise(async(resolve,reject)=>{
+        db.get().collection(collection.LOAN_INSTALLMENT).deleteMany({RegId:loanbody.RegId})
+        console.log('deleting loan installment record')
+        resolve(result)
+
+    })
 }
 }

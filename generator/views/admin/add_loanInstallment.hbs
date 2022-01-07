@@ -3,7 +3,7 @@
 {{#each balance}}
 <div class="col-md-6">
     <label for="inputEmail4" class="form-label">loan balance</label>
-    <input type="text" class="form-control" id="inputRegId" name="RegId" value="{{this.amount}}" readonly>
+    <input type="text" class="form-control" id="loanBalance" name="loanBalance" value="{{this.amount}}" readonly>
   </div>
   {{/each}}
         <form action="add_loaninstallment" method="post" class="row g-3">

@@ -143,6 +143,7 @@ router.post('/searchId_addLoanInstallment',(req,res,next)=>{
 })
 
 router.post('/add_loanInstallment',(req,res,next)=>{
+  
   memberHelper.insertLoanInstallment(req.body).then((result)=>{
     console.log("hai add_loanInstallment")
     console.log(result[0].amount)
@@ -153,7 +154,16 @@ router.post('/add_loanInstallment',(req,res,next)=>{
     })
 
     memberHelper.getLoanWithdrawal(req.body).then((balance)=>{
-      console.log(balance)
+      console.log('balance amount:'+balance[0].amount)
+          if(balance[0].amount==0){
+            memberHelper.deleteLoanWithdrawal(req.body).then((result)=>{
+              console.log(result)
+            })
+            memberHelper.deleteLoanInstallment(req.body).then((result)=>{
+              console.log("delete loan installment")
+              console.log(result)
+            })
+          }
           res.render('admin/loan_balance',{admin:true,balance})
     })
     
