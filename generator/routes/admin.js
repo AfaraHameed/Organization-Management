@@ -24,11 +24,14 @@ router.get('/add_member',function(req,res,next){
 router.post('/add_member',(req,res,next)=>{
 
   console.log(req.body)
-  memberHelper.addMember(req.body,(result)=>{
+  memberHelper.addMember(req.body).then((result)=>{
+    
     res.render('admin/add_member',{admin:true})
-
   })
+
+  
 })
+
 
 router.get('/view_members',function(req,res,next){
   
@@ -155,7 +158,7 @@ router.post('/add_loanInstallment',(req,res,next)=>{
 
     memberHelper.getLoanWithdrawal(req.body).then((balance)=>{
       console.log('balance amount:'+balance[0].amount)
-          if(balance[0].amount==0){
+          if(balance[0].amount===0){
             memberHelper.deleteLoanWithdrawal(req.body).then((result)=>{
               console.log(result)
             })

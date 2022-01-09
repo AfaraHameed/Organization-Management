@@ -1,13 +1,45 @@
 var db = require('../config/connection')
 var collection = require('../config/collection')
-
+var bcrypt = require('bcrypt')
 module.exports = {
 
-    addMember : (member,callback)=>{
+    addMember : (member)=>{
         console.log( member )
-        db.get().collection('member').insertOne(member).then((data)=>{
-            callback(true)
+        return new Promise(async(resolve,reject)=>{
+
+            member.password = await bcrypt.hash(member.password,10)
+            db.get().collection('member').insertOne(member).then((data)=>{
+                resolve(data)
         })
+       
+        })
+    },
+    doLogin: (userData) => {
+        return new Promise(async (resolve, reject) => {
+            let loginStatus = false
+            let response = {}
+            let user = await db.get().collection(collection.MEMBER_COLLECTION).findOne({ regId: userData.regId })
+            if (user) {
+                bcrypt.compare(userData.password, user.password).then((status) => {
+                    if (status) {
+                    
+                        console.log('login success')
+                        response.user = user
+                        response.status = true
+                        resolve(response)
+                    }
+                    else {
+                        console.log('password incorrect')
+                        resolve({ status: false })
+                    }
+                })
+            }
+            else {
+                console.log('login failed')
+                resolve({ status: false })
+            }
+        })
+
     },
     getMembers:()=>{
         
@@ -25,9 +57,11 @@ module.exports = {
         })
     },
     insertInstallment:(installment)=>{
-        return new Promise(async(resolve,reject)=>{
-            db.get().collection(collection.INSTALLMENT_COLLECTION).insertOne(installment)
-            resolve(installment)
+        return new Promise((resolve,reject)=>{
+            db.get().collection(collection.INSTALLMENT_COLLECTION).insertOne(installment).then((response)=>{
+                resolve(installment)
+            })
+           
         })
     },
     getMonthlyInstallment:(RegId)=>{
@@ -38,9 +72,11 @@ module.exports = {
     })
     },
     insertLoan:(loan)=>{
-        return new Promise(async(resolve,reject)=>{
-            db.get().collection(collection.LOAN_WITHDRAWAL).insertOne(loan)
-            resolve(loan)
+        return new Promise((resolve,reject)=>{
+            db.get().collection(collection.LOAN_WITHDRAWAL).insertOne(loan).then((loan)=>{
+                resolve(loan)
+            })
+           
         })
     },
     insertLoanInstallment:(loanInstallment)=>{
@@ -50,7 +86,7 @@ module.exports = {
            // resolve(loan)
 
        
-            let balance_loan = db.get().collection(collection.LOAN_WITHDRAWAL).aggregate([
+            let balance_loan = await db.get().collection(collection.LOAN_WITHDRAWAL).aggregate([
                 {
                 $match:
                  { RegId: loanInstallment.RegId  }
@@ -72,43 +108,23 @@ module.exports = {
 
 
         
-        //     db.get().collection(collection.LOAN_WITHDRAWAL).updateOne({ RegId: loanInstallment.RegId },
-        //         {$set:
-        //         {
-        //             //amount:{ $subtract: [{'$convert': { 'input': '$amount', 'to': 'int' }}, loanInstallment.amount ] } 
-        //        amount:{$subtract:['$amount',loanInstallment.amount ]}
-        //         }
-        //     })
-            
-        //     resolve(loanInstallment)
-        // })
+      
     })
-    // updateLoanWithdrawal:(loan)=>{
-    //     return new Promise(async(resolve,reject)=>{
-    //         console.log("update hai")
-    //         db.get().collection(collection.LOAN_WITHDRAWAL).updateOne({ RegId: loan.RegId },
-    //         {
-    //              $subtract: ["amount", loan.amount ] 
-    //         }).then((response) => {
-    //             resolve(true)
-    //         })
-
-    //     })
-       
-
-    // }
+    
     
 },
 
 updateLoanWithdrawal:(balance_loan,loanbody)=>{
     return new Promise(async(resolve,reject)=>{
-        db.get().collection(collection.LOAN_WITHDRAWAL).updateOne({RegId:loanbody.RegId},
+       await db.get().collection(collection.LOAN_WITHDRAWAL).updateOne({RegId:loanbody.RegId},
             {
             $set:
             {amount:balance_loan}
             }
-        )
-        resolve(balance_loan)
+        ).then((balance_loan)=>{
+            resolve(balance_loan)
+        })
+       
 
     })
 },
@@ -128,17 +144,22 @@ getLoanWithdrawalMembers:()=>{
 
 },
 deleteLoanWithdrawal:(loanbody)=>{
-    return new Promise(async(resolve,reject)=>{
-        db.get().collection(collection.LOAN_WITHDRAWAL).deleteOne({RegId:loanbody.RegId})
-        resolve(result)
+    return new Promise((resolve,reject)=>{
+        db.get().collection(collection.LOAN_WITHDRAWAL).deleteOne({RegId:loanbody.RegId}).then((result)=>{
+            resolve(result)
+        })
+        
     })
 },
 deleteLoanInstallment:(loanbody)=>{
-    return new Promise(async(resolve,reject)=>{
-        db.get().collection(collection.LOAN_INSTALLMENT).deleteMany({RegId:loanbody.RegId})
-        console.log('deleting loan installment record')
-        resolve(result)
-
+    return new Promise((resolve,reject)=>{
+        db.get().collection(collection.LOAN_INSTALLMENT).deleteMany({RegId:loanbody.RegId}).then((result)=>{
+            console.log('deleting loan installment record')
+            resolve(result)
+    
+        })
+       
     })
+
 }
 }

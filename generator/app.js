@@ -20,11 +20,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
+var session = require('express-session')
 db.connect((err)=>{
   if(err) console.log('connection error'+err)
   else console.log('data base connected')
 })
+
+app.use(session({secret:'Key',cookie:{maxAge:60000}}))
 app.use('/', userRouter);
 app.use('/admin', adminRouter);
 
