@@ -161,5 +161,64 @@ deleteLoanInstallment:(loanbody)=>{
        
     })
 
+},
+getTotalMonthlyInstallment:(regId)=>{
+    return new Promise(async(resolve,reject)=>{
+        console.log("hai total"+regId)
+        let sum = await db.get().collection(collection.INSTALLMENT_COLLECTION).aggregate(
+            [
+                {
+                    $match: {
+                           RegId: regId
+                    }
+                 },
+                {
+                    $group : 
+                    {
+                        _id : "$RegId", sum : {$sum : {'$convert': { 'input': '$amount', 'to': 'int' }}}
+                    }
+                },
+                {
+                    $project: {
+                           sum: 1
+                  }
+                }
+                
+        ]).toArray()
+            
+    //             $match:
+    //             {
+    //                 regId : regId
+    //             }
+    //         },
+    //         // {
+    //         //     $project:{
+    //         //         sum:{$sum:"$amount"} 
+    //         //     }
+    //         // }
+    //         {
+    //             $group: {
+                   
+    //                 _id:null,
+    //                 "total": { $sum: {'$convert': { 'input': '$amount', 'to': 'int' }} }
+                    
+    //             }
+    //         },
+    //         // {
+    //         // $group: {
+    //         //     _id: null,
+    //         //      "Total": {
+    //         //         $sum: "$amount"
+    //         //      }
+    //         //  }
+             
+    //         // }
+       
+    // ]).toArray()
+            
+            console.log('sum:'+sum)
+            resolve(sum)
+        
+    })
 }
 }

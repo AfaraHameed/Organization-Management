@@ -11,9 +11,15 @@ router.get('/', function(req, res, next) {
 });
 
 //member details page
-router.get('/members_details', function (req,res,next){
+router.get('/members_details/:id', function (req,res,next){
 
-    res.render('admin/members_details',{admin:true,memberDetail})
+  memberHelper.getTotalMonthlyInstallment(req.params.id).then((sum)=>{
+    console.log(sum)
+   // console.log(sum[0].sum)
+    res.render('admin/view_profile',{admin:true,sum})
+  })
+
+   
 })
 
 
