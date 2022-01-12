@@ -3,6 +3,7 @@ var express = require('express');
 var router = express.Router();
 var memberHelper = require('../helpers/members_helper')
 
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
   
@@ -229,6 +230,24 @@ router.get('/viewLoan',(req,res,next)=>{
   })
  
 })
+router.get('/edit_member/:id',(req,res,next)=>{
+
+    memberHelper.getEachMembers(req.params.id).then((member)=>{
+      console.log(member)
+      res.render('admin/edit_member',{admin:true,member})
+    })
+    
+  
+})
+
+router.post('/edit_member/:id',(req,res,next)=>{
+   memberHelper.updateMember(req.body).then((result)=>{
+     console.log(result)
+     
+     res.redirect('/admin')
+   })
+})
+
 
 
 module.exports = router;

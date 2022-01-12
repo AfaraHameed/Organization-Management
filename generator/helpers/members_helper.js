@@ -199,5 +199,28 @@ memberDetailLoanBalance:(regId)=>{
         resolve(balance)
     })
    
-}
+},
+getEachMembers:(RegId)=>{
+    return new Promise(async(resolve,reject)=>{
+        let member =await db.get().collection(collection.MEMBER_COLLECTION).findOne({regId:RegId})
+        console.log(RegId)
+        console.log('member:'+member)
+        resolve(member)
+    })
+    },
+    updateMember:(member)=>{
+        return new Promise((resolve,reject)=>{
+            db.get().collection(collection.MEMBER_COLLECTION).updateOne({regId:member.regId},
+                {
+                $set:
+                {userName:member.userName,email:member.email,phone:member.phone,regId:member.regId,role:member.role}
+                }
+            ).then((balance_loan)=>{
+                
+                resolve(balance_loan)
+            })
+           
+    
+        })
+    }
 }
