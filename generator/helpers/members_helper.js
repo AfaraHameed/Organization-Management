@@ -82,7 +82,7 @@ module.exports = {
     insertLoanInstallment:(loanInstallment)=>{
         return new Promise(async(resolve,reject)=>{
             loanInstallment.amount = parseInt(loanInstallment.amount)
-            db.get().collection(collection.LOAN_INSTALLMENT).insertOne(loanInstallment)
+            await db.get().collection(collection.LOAN_INSTALLMENT).insertOne(loanInstallment)
            // resolve(loan)
 
        
@@ -115,13 +115,14 @@ module.exports = {
 },
 
 updateLoanWithdrawal:(balance_loan,loanbody)=>{
-    return new Promise(async(resolve,reject)=>{
-       await db.get().collection(collection.LOAN_WITHDRAWAL).updateOne({RegId:loanbody.RegId},
+    return new Promise((resolve,reject)=>{
+        db.get().collection(collection.LOAN_WITHDRAWAL).updateOne({RegId:loanbody.RegId},
             {
             $set:
             {amount:balance_loan}
             }
         ).then((balance_loan)=>{
+            
             resolve(balance_loan)
         })
        
@@ -186,39 +187,17 @@ getTotalMonthlyInstallment:(regId)=>{
                 
         ]).toArray()
             
-    //             $match:
-    //             {
-    //                 regId : regId
-    //             }
-    //         },
-    //         // {
-    //         //     $project:{
-    //         //         sum:{$sum:"$amount"} 
-    //         //     }
-    //         // }
-    //         {
-    //             $group: {
-                   
-    //                 _id:null,
-    //                 "total": { $sum: {'$convert': { 'input': '$amount', 'to': 'int' }} }
-                    
-    //             }
-    //         },
-    //         // {
-    //         // $group: {
-    //         //     _id: null,
-    //         //      "Total": {
-    //         //         $sum: "$amount"
-    //         //      }
-    //         //  }
-             
-    //         // }
-       
-    // ]).toArray()
-            
             console.log('sum:'+sum)
             resolve(sum)
         
     })
+},
+memberDetailLoanBalance:(regId)=>{
+    return new Promise(async(resolve,reject)=>{
+        let balance = await db.get().collection(collection.LOAN_WITHDRAWAL).find({RegId:regId}).toArray()
+       console.log('balance loasn is:'+balance)
+        resolve(balance)
+    })
+   
 }
 }

@@ -11,13 +11,21 @@ router.get('/', function(req, res, next) {
 });
 
 //member details page
-router.get('/members_details/:id', function (req,res,next){
+router.get('/members_details/:id',function (req,res,next){
 
   memberHelper.getTotalMonthlyInstallment(req.params.id).then((sum)=>{
     console.log(sum)
-   // console.log(sum[0].sum)
-    res.render('admin/view_profile',{admin:true,sum})
-  })
+   memberHelper.memberDetailLoanBalance(req.params.id).then((total)=>{
+      console.log(total)
+      res.render('admin/members_details',{admin:true,sum,total})
+      
+      
+    })
+    
+    
+     
+   })
+   
 
    
 })
@@ -155,14 +163,13 @@ router.post('/add_loanInstallment',(req,res,next)=>{
   
   memberHelper.insertLoanInstallment(req.body).then((result)=>{
     console.log("hai add_loanInstallment")
+    console.log(result)
     console.log(result[0].amount)
 
     memberHelper.updateLoanWithdrawal(result[0].amount,req.body).then((result)=>{
       console.log(result)
      // res.render('admin/add_loanInstallment',{admin:true})
-    })
-
-    memberHelper.getLoanWithdrawal(req.body).then((balance)=>{
+     memberHelper.getLoanWithdrawal(req.body).then((balance)=>{
       console.log('balance amount:'+balance[0].amount)
           if(balance[0].amount===0){
             memberHelper.deleteLoanWithdrawal(req.body).then((result)=>{
@@ -175,6 +182,21 @@ router.post('/add_loanInstallment',(req,res,next)=>{
           }
           res.render('admin/loan_balance',{admin:true,balance})
     })
+    })
+
+    // memberHelper.getLoanWithdrawal(req.body).then((balance)=>{
+    //   console.log('balance amount:'+balance[0].amount)
+    //       if(balance[0].amount===0){
+    //         memberHelper.deleteLoanWithdrawal(req.body).then((result)=>{
+    //           console.log(result)
+    //         })
+    //         memberHelper.deleteLoanInstallment(req.body).then((result)=>{
+    //           console.log("delete loan installment")
+    //           console.log(result)
+    //         })
+    //       }
+    //       res.render('admin/loan_balance',{admin:true,balance})
+    // })
     
   })
     // memberHelper.updateLoanWithdrawal(req.body).then((result)=>{

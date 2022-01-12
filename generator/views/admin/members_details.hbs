@@ -1,29 +1,14 @@
+
 <section>
-    <div class="container">
-        <table class="table table-hover">
-        <thead>
-        <tr>
-        <th scope="col">user name</th>
-        <th scope="col">email</th>
-        <th scope="col">monthly amount</th>
-        <th scope="col">date</th>
-        <th scope="col">Loan amount</th>
-        <th scope="col">date</th>
-        </tr>
-        </thead>
-        <tbody>
-            {{#each memberDetail}}
-            <tr>
-            <th scope="row">{{this.username}}</th>
-            <td>{{this.email}}</td>
-            <td>{{this.monthly_amount}}</td>
-            <td>{{this.date_m}}</td>
-            <td>{{this.loan_amount}}</td>
-            <td>{{this.date_l}}</td>
-            </tr>
-            {{/each}}
-           
-        </tbody>
-        </table>
-    </div>
+<div class="container col-md-6 mt-5">
+{{#each sum}}
+<h5>total monthly installment</h5>
+<input type="text" name="monthly_installment" value="{{this.sum}}" readonly>
+
+{{/each}}
+{{#each total}}
+<h5>total loan balance :</h5>
+<input type="text" name="loan_balance" value="{{this.amount}}" readonly>
+{{/each}}
+</div>
 </section>
