@@ -8,19 +8,19 @@
       <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
         <form action="/login" method="POST" class="mt-5 p-2"> 
          {{#if loginErr}}
-         <p class="loginErr">invalid RegId or password</p>
+         <p class="loginErr">{{loginErr}}</p>
          {{/if}}
          <!-- Email input -->
           <div class="form-outline mb-4 ">
             <input type="text" name="regId" class="form-control form-control-lg"
-              placeholder="Enter a valid RegId" />
+              placeholder="Enter a valid RegId" required />
             <label class="form-label" for="form3Example3">Registration Id</label>
           </div>
 
           <!-- Password input -->
           <div class="form-outline mb-3">
             <input type="password" name="password" class="form-control form-control-lg"
-              placeholder="Enter password" />
+              placeholder="Enter password" required />
             <label class="form-label" for="form3Example4">Password</label>
           </div>
 
