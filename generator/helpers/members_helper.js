@@ -222,5 +222,123 @@ getEachMembers:(RegId)=>{
            
     
         })
+    },
+    getMonthlyInstallmentByYear:(RegId,body)=>{
+        return new Promise(async(resolve,reject)=>{
+            year=body.year
+            console.log('regId '+RegId)
+            console.log('year '+body.year)
+            // let installment = await db.get().collection(collection.INSTALLMENT_COLLECTION).find({$expr: {
+            //     $and: [
+            //         {
+            //             RegId:RegId
+            //         }
+            //         ,
+            //       {
+            //         "$eq": [
+            //           {
+            //             "$year": "$date"
+            //           },
+            //           year
+            //         ]
+            //       }
+            //     ]
+            //   }}).toArray()
+            
+            let installment = await db.get().collection(collection.INSTALLMENT_COLLECTION).aggregate([ {
+                $project: {
+                   date: {
+                      $dateFromString: {
+                         dateString: '$date',
+                        
+                      }
+                   }
+                }
+            },
+            {
+                $project:{
+                    date:1,
+                    Year: {
+                        $year: "$date"
+                      },
+                      Month: {
+                        $month: "$date"
+                      }
+                      
+                      },
+                      
+                }
+            }
+           ,
+           
+                {
+                    $match:{
+                        // $and:[
+                        //     {RegId:RegId},
+                        //     {
+                        //         name:"helo"
+                        //     }
+                        // ]
+                        RegId:RegId,
+                        name:"helo"
+                    }
+                },
+                {
+                    $project:{
+                       // date:1,Year:1
+                       amount:1
+                    }
+                }
+              ]).toArray()
+              console.log("installment"+installment.amount)
+             // console.log("installment"+installment[0].Year)
+            resolve(installment)
+        })
+    },
+    getLoanInstallment:(regId)=>{
+        return new Promise(async(resolve,reject)=>{
+            console.log('regId '+regId)
+            let LoanInstallment = await db.get().collection(collection.LOAN_INSTALLMENT).find({RegId:regId}).toArray()
+            console.log(LoanInstallment)
+            resolve(LoanInstallment)
+        })
+
+    },
+    getTotalLoanInstallment:(regId,)=>{
+        return new Promise(async(resolve,reject)=>{
+            console.log("hai total"+regId)
+            let sum = await db.get().collection(collection.LOAN_INSTALLMENT).aggregate(
+                [
+                    {
+                        $match: {
+                               RegId: regId
+                        }
+                     },
+                    {
+                        $group : 
+                        {
+                            _id : "$RegId", sum : {$sum : {'$convert': { 'input': '$amount', 'to': 'int' }}}
+                        }
+                    },
+                    {
+                        $project: {
+                               sum: 1
+                      }
+                    }
+                    
+            ]).toArray()
+                
+                console.log('sum:'+sum)
+                resolve(sum)
+            
+        })
+    },
+    getLoanWithdrawal:(regId)=>{
+        return new Promise(async(resolve,reject)=>{
+            let balance = await db.get().collection(collection.LOAN_WITHDRAWAL).find({RegId:regId}).toArray()
+           console.log('balance loasn is:'+balance)
+            resolve(balance)
+        })
+       
     }
 }

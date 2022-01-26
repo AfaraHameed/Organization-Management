@@ -72,5 +72,42 @@ router.get('/profile',verifyLogin,(req,res,next)=>{
      res.render('user/profile',{result})
   })
 })
+ router.get('/view_installment',verifyLogin,(req,res,next)=>{
+   memberHelper.getMonthlyInstallment(req.session.user.regId).then((result)=>{
 
+    memberHelper.getTotalMonthlyInstallment(req.session.user.regId).then((sum) => {
+      console.log(sum)
+      res.render('user/view_installment',{result,sum})
+    })
+    
+   })
+ })
+ router.get('/search_year',verifyLogin,(req,res,next)=>{
+   res.render('user/search_year')
+ })
+//  router.post('/search_year',verifyLogin,(req,res,next)=>{
+//   memberHelper.getMonthlyInstallmentByYear(req.session.user.regId,req.body).then((result)=>{
+//    // console.log(result.total)
+//   //  memberHelper.getTotalMonthlyInstallment(req.session.user.regId).then((sum) => {
+//   //    console.log(sum)
+//   //    res.render('user/view_installment',{result,sum})
+//   //  })
+//   console.log(result.date)
+//   res.render('user/view_installment',{result})
+   
+//   })
+//})
+router.get('/view_loan_installment',verifyLogin,(req,res,next)=>{
+  memberHelper.getLoanInstallment(req.session.user.regId).then((result)=>{
+
+   memberHelper.getTotalLoanInstallment(req.session.user.regId).then((sum) => {
+     console.log(sum)
+     memberHelper.getLoanWithdrawal(req.session.user.regId).then((balance)=>{
+      res.render('user/view_loan_installment',{result,sum,balance})
+     })
+    
+   })
+   
+  })
+})
 module.exports = router;
